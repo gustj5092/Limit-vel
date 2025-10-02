@@ -38,10 +38,8 @@ def simulate(mode, x0, N, dt, Q, R, v_max, R_cbf, beta, w_list=None, v_list=None
         K = Pk @ Cx.T @ np.linalg.inv(R)
         P_dot = A @ Pk + Pk @ A.T + Q - Pk @ Cx.T @ np.linalg.inv(R) @ Cx @ Pk
 
-        # 목표 제어 입력
-        u_des = 3.0 - xh[1] 
 
-        # CBF-QP 기반 안전한 제어
+        u_des = 3.0 - xh[1] 
         if mode == "our":
             a = np.array([0.0, -1.0])
             a_dot = np.zeros_like(a)
@@ -57,7 +55,7 @@ def simulate(mode, x0, N, dt, Q, R, v_max, R_cbf, beta, w_list=None, v_list=None
         elif mode == "cccbf":
             u = cccbf_cbf_qp(xh, u_des, v_max, R_cbf, Pk, delta=delta_cc)
             
-        else: # "nom" - 사용하지 않지만 fallback으로 남겨둠
+        else: # "nom" 
              a = np.array([0.0, -1.0])
              h = v_max - (a @ xh)
              lfh = a @ f_sample(xh)
@@ -72,7 +70,6 @@ def simulate(mode, x0, N, dt, Q, R, v_max, R_cbf, beta, w_list=None, v_list=None
         xh += dt * (system_dynamics(xh, u) + K @ (y - C_sample(xh)))
         Pk += dt * P_dot
 
-        # 안정성을 위한 프로젝션
         e_v = x[1] - xh[1]
         Pk_vv = Pk[1, 1]
         if (e_v**2 / Pk_vv) > beta:

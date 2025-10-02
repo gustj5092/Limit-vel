@@ -8,7 +8,7 @@ dt = 0.05
 T = 15.0
 N = int(T / dt)
 x0 = np.array([0.0, 1.0])
-Q = 0.01 * np.eye(2)
+Q = 0.0 * np.eye(2)
 R = np.array([[0.05, 0], [0, 0.05]])
 v_max = 3.0
 R_cbf = np.array([[0.01]])
@@ -18,7 +18,7 @@ confidence = 0.95
 beta = chi2.ppf(confidence, df=1) # OURS (TVRCBF)
 delta_cc = 1 - confidence        # CCCBF
 
-# MR-CBF를 위한 립시츠 상수 (단순 시스템이므로 직접 계산)
+# MR-CBF를 위한 립시츠 상수 
 L_Lfh = 0.0
 L_alpha_h = 1.0 
 L_Lgh = 0.0

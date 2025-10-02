@@ -36,7 +36,7 @@ def cbf_qp_osqp(h_val, lfh_val, lgh_val, u_des, v_max, R_cbf, gamma=1.0, osqp_op
 def our_cbf_qp(x_hat, e_star, e_dot_star, u_des, v_max, R_cbf):
     """ OURS (TVRCBF) """
     v = x_hat[1] + e_star[1]
-    v_dot = e_dot_star[1] # u는 QP 변수이므로 h_dot에서 처리
+    v_dot = e_dot_star[1] 
     
     h = v_max - v
     lfh = -v_dot
@@ -49,12 +49,11 @@ def mrcbf_cbf_qp(x_hat, u_des, v_max, R_cbf, L_alpha_h, epsilon):
     v = x_hat[1]
     h = v_max - v
     
-    # MR-CBF 제약: Lfh + Lgh*u - L_alpha_h*eps >= -alpha*h
+    # 제약: Lfh + Lgh*u - L_alpha_h*eps >= -alpha*h
     # (Lfh=0, Lgh=-1, alpha=1.0) -> -u - L_alpha_h*eps >= -h
     # -> u <= h - L_alpha_h*eps
     u_upper_bound = h - L_alpha_h * epsilon
     
-    # QP를 풀 필요 없이 u_des를 클리핑
     return min(u_des, u_upper_bound)
 
 
@@ -63,7 +62,7 @@ def cccbf_cbf_qp(x_hat, u_des, v_max, R_cbf, Pk, delta=0.05):
     v = x_hat[1]
     h = v_max - v
     
-    # CC-CBF 제약: -u + h >= z*sqrt(Pk_vv)
+    # 제약: -u + h >= z*sqrt(Pk_vv)
     # -> u <= h - z*sqrt(Pk_vv)
     z = float(norm.ppf(1.0 - float(delta)))
     Pk_vv = Pk[1, 1]
